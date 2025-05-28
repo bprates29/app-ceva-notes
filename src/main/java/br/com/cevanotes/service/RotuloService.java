@@ -36,6 +36,11 @@ public class RotuloService {
         return buscarPorId(id);
     }
 
+    public void deletar(int id) {
+        buscarPorId(id);
+        repository.delete(id);
+    }
+
     private Rotulo construirRotuloAPartirDoDTO(RotuloDTO dto) {
         Rotulo rotulo = new Rotulo();
         rotulo.setNome(dto.getNome());

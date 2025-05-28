@@ -52,5 +52,11 @@ public class RotuloRepository {
         );
     }
 
-
+    public void delete(int id) {
+        jdbi.useHandle(handle ->
+                handle.createUpdate("DELETE FROM rotulos WHERE id = :id")
+                        .bind("id", id)
+                        .execute()
+        );
+    }
 }
