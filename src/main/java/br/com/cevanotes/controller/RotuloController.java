@@ -12,5 +12,13 @@ public class RotuloController {
 
     public void registrarRotas(Javalin app) {
         app.get("/rotulos", ctx -> ctx.json(service.listar()));
+        app.get("/rotulos/{id}", ctx -> {
+            try {
+                int id = Integer.parseInt(ctx.pathParam("id"));
+                ctx.json(service.buscarPorId(id));
+            } catch (NumberFormatException e) {
+                ctx.status(400).result("ID inválido. Use um número inteiro.");
+            }
+        });
     }
 }
