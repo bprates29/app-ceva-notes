@@ -41,4 +41,16 @@ public class RotuloRepository {
         );
     }
 
+    public void update(Rotulo r) {
+        jdbi.useHandle(handle ->
+                handle.createUpdate("""
+           UPDATE rotulos SET nome = :nome, estilo = :estilo, teor_alcoolico = :teorAlcoolico,
+           cervejaria = :cervejaria, data_cadastro = :dataCadastro WHERE id = :id
+       """)
+                        .bindBean(r)
+                        .execute()
+        );
+    }
+
+
 }

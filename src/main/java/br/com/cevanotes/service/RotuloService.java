@@ -25,14 +25,43 @@ public class RotuloService {
     }
 
     public Rotulo salvar(RotuloDTO dto) {
+        Rotulo rotulo = construirRotuloAPartirDoDTO(dto);
+        return buscarPorId(repository.insert(rotulo));
+    }
+
+    public Rotulo atualizar(int id, RotuloDTO dto) {
+        Rotulo rotulo = buscarPorId(id);
+        aplicarAtualizacoes(rotulo, dto);
+        repository.update(rotulo);
+        return buscarPorId(id);
+    }
+
+    private Rotulo construirRotuloAPartirDoDTO(RotuloDTO dto) {
         Rotulo rotulo = new Rotulo();
         rotulo.setNome(dto.getNome());
         rotulo.setEstilo(dto.getEstilo());
         rotulo.setTeorAlcoolico(dto.getTeorAlcoolico());
         rotulo.setCervejaria(dto.getCervejaria());
         rotulo.setDataCadastro(LocalDate.now());
-
-        return buscarPorId(repository.insert(rotulo));
+        return rotulo;
     }
+
+    private void aplicarAtualizacoes(Rotulo rotulo, RotuloDTO dto) {
+        if (dto.getNome() != null) {
+            rotulo.setNome(dto.getNome());
+        }
+        if (dto.getEstilo() != null) {
+            rotulo.setEstilo(dto.getEstilo());
+        }
+        if (dto.getTeorAlcoolico() > 0) {
+            rotulo.setTeorAlcoolico(dto.getTeorAlcoolico());
+        }
+        if (dto.getCervejaria() != null) {
+            rotulo.setCervejaria(dto.getCervejaria());
+        }
+
+        rotulo.setDataCadastro(LocalDate.now());
+    }
+
 
 }

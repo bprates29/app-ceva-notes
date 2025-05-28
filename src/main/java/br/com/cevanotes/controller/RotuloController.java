@@ -4,6 +4,8 @@ import br.com.cevanotes.dto.RotuloDTO;
 import br.com.cevanotes.model.Rotulo;
 import br.com.cevanotes.service.RotuloService;
 import io.javalin.Javalin;
+import io.javalin.http.BadRequestResponse;
+import io.javalin.http.Context;
 
 public class RotuloController {
     private final RotuloService service;
@@ -15,12 +17,8 @@ public class RotuloController {
     public void registrarRotas(Javalin app) {
         app.get("/rotulos", ctx -> ctx.json(service.listar()));
         app.get("/rotulos/{id}", ctx -> {
-            try {
-                int id = Integer.parseInt(ctx.pathParam("id"));
-                ctx.json(service.buscarPorId(id));
-            } catch (NumberFormatException e) {
-                ctx.status(400).result("ID inválido. Use um número inteiro.");
-            }
+            var id = parseIdParam(ctx);
+            ctx.json(service.buscarPorId(id));
         });
         app.post("/rotulos", ctx -> {
             RotuloDTO dto = ctx.bodyValidator(RotuloDTO.class)
@@ -32,7 +30,19 @@ public class RotuloController {
             Rotulo novo = service.salvar(dto);
             ctx.status(201).json(novo);
         });
+        app.put("/rotulos/{id}", ctx -> {
+            var id = parseIdParam(ctx);
+            var r = ctx.bodyAsClass(RotuloDTO.class);
+            var update = service.atualizar(id, r);
+            ctx.status(200).json(update);
+        });
     }
 
-
+    private int parseIdParam(Context ctx) {
+        try {
+            return Integer.parseInt(ctx.pathParam("id"));
+        } catch (NumberFormatException e) {
+            throw new BadRequestResponse("ID inválido. Use um número inteiro.");
+        }
+    }
 }
