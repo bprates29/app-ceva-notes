@@ -6,6 +6,8 @@ public class RotuloDTO {
     private double teorAlcoolico;
     private String cervejaria;
 
+
+
     // Getters e setters
     public String getNome() {
         return nome;
