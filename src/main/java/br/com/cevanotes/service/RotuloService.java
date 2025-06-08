@@ -33,7 +33,7 @@ public class RotuloService {
         Rotulo rotulo = buscarPorId(id);
         aplicarAtualizacoes(rotulo, dto);
         repository.update(rotulo);
-        return buscarPorId(id);
+        return rotulo;
     }
 
     public void deletar(int id) {

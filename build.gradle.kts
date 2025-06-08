@@ -1,9 +1,22 @@
 plugins {
     id("java")
+    id("application")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "br.com.cevanotes"
 version = "1.0-SNAPSHOT"
+
+// Configuração para deployment
+application {
+    mainClass.set("br.com.cevanotes.Main")
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
 
 repositories {
     mavenCentral()
@@ -29,4 +42,17 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+// Task para criar JAR executável com todas as dependências (Fat JAR)
+tasks.jar {
+    enabled = false
+    dependsOn(tasks.shadowJar)
+}
+
+tasks.shadowJar {
+    archiveClassifier.set("")
+    manifest {
+        attributes(mapOf("Main-Class" to "br.com.cevanotes.Main"))
+    }
 }

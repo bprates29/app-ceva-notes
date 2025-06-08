@@ -17,8 +17,22 @@ public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws SQLException, IOException {
-
-        Javalin app = Javalin.create().start(7070);
+        // Porta dinâmica para produção (Railway, Render, etc) ou 7070 para desenvolvimento
+        int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "7070"));
+        
+        Javalin app = Javalin.create(config ->
+            // Habilita CORS para permitir acesso de diferentes origens (útil para demos)
+            config.bundledPlugins.enableCors(cors ->
+                cors.addRule(it -> {
+                    it.anyHost();
+                    it.allowCredentials = false;
+                })
+            )
+        ).start(port);
+        
+        log.info("🚀 API Ceva Notes iniciada na porta: {}", port);
+        log.info("📍 Ambiente: {}", System.getenv().getOrDefault("ENVIRONMENT", "development"));
+        
         var dbConfig = DbConfig.createJdbi();
         var rotuloRepository = new RotuloRepository(dbConfig);
         var rotuloService = new RotuloService(rotuloRepository);
@@ -27,7 +41,8 @@ public class Main {
         app.after(ctx ->
             log.info("Requisição: {} {} -> status {}", ctx.method(), ctx.path(), ctx.status()));
 
-        app.get("/teste", ctx -> ctx.result("API funcionando!"));
+        app.get("/teste", ctx -> ctx.result("🍺 API Ceva Notes funcionando! Ambiente: " + 
+            System.getenv().getOrDefault("ENVIRONMENT", "development")));
         new RotuloController(rotuloService).registrarRotas(app);
     }
 
