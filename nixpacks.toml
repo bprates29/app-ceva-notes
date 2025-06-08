@@ -1,0 +1,5 @@
+[phases.build]
+cmds = ['./gradlew shadowJar --no-daemon']
+
+[start]
+cmd = 'java -jar build/libs/ceva-notes-geral-1.0-SNAPSHOT.jar' 
