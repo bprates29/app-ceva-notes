@@ -1,0 +1,33 @@
+# Build artifacts
+build/
+.gradle/
+bin/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+docs/
+
+# Scripts locais
+build.sh
+
+# Arquivos temporários
+tmp/
+temp/ 
